@@ -1,21 +1,27 @@
-#ifndef _TOKENIZER_
-#define _TOKENIZER_
-
+#include <stdio.h>
+#include <stdlib.h>
+# include "tokenizer.h"
 
 /* Return true (non-zero) if c is a whitespace characer
    ('\t' or ' ').  
    Zero terminators are not printable (therefore false) */
 int space_char(char c);
+{
+  if(c == ' ' || c == '\t' || c == '\0')
+    return 1;
+  else
+    return 0;
+}
 
 /* Return true (non-zero) if c is a non-whitespace 
    character (not tab or space).  
-   Zero terminators are not printable (therefore false) */ 
+   Zero terminators are not printable (therefore false) */
 int non_space_char(char c);
 
 /* Returns a pointer to the first character of the next 
    space-separated word in zero-terminated str.  Return a zero pointer if 
    str does not contain any words. */
-char *word_start(char *str); 
+char word_start(char *str);
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word);
@@ -43,5 +49,3 @@ void print_tokens(char **tokens);
 
 /* Frees all tokens and the vector containing themx. */
 void free_tokens(char **tokens);
-
-#endif
