@@ -28,6 +28,17 @@ int non_space_char(char c);
    space-separated word in zero-terminated str.  Return a zero pointer if 
    str does not contain any words. */
 char word_start(char *str);
+{
+  while(*str != '\0')
+    {
+      if (non_space_char(*str) == 1)
+	return str;
+      else if (*str == '\0')
+	return str;
+      str++;
+    }
+  return str;
+}
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word);
