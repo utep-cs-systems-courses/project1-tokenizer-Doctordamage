@@ -21,7 +21,7 @@ char *word_start(char *str);
 char *word_terminator(char *word);
 
 /* Counts the number of words in the string argument. */
-int count_words(char *str);
+int *count_words(char *str);
 
 /* Returns a fresly allocated new zero-terminated string 
    containing <len> chars from <inStr> */
@@ -43,5 +43,11 @@ void print_tokens(char **tokens);
 
 /* Frees all tokens and the vector containing themx. */
 void free_tokens(char **tokens);
+
+/* Returns the length of the string. */
+short string_length(char *str);
+
+/* Returns the length of a single word. */
+int word_length(char *str);
 
 #endif

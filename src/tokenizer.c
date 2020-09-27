@@ -1,22 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-# include "tokenizer.h"
+#include "tokenizer.h"
 
 /* Return true (non-zero) if c is a whitespace characer
    ('\t' or ' ').  
    Zero terminators are not printable (therefore false) */
-int space_char(char c);
+int space_char(char c)
 {
   if(c == ' ' || c == '\t' || c == '\0')
-    return 1;
+      return 1;
   else
-    return 0;
+      return 0;
 }
 
 /* Return true (non-zero) if c is a non-whitespace 
    character (not tab or space).  
    Zero terminators are not printable (therefore false) */
-int non_space_char(char c);
+int non_space_char(char c)
 {
   if(c == ' ' || c == '\t' || c == '\0')
     return 0;
@@ -27,35 +27,39 @@ int non_space_char(char c);
 /* Returns a pointer to the first character of the next 
    space-separated word in zero-terminated str.  Return a zero pointer if 
    str does not contain any words. */
-char word_start(char *str);
+char *word_start(char *str)
 {
   while(*str != '\0')
     {
       if (non_space_char(*str) == 1)
-	return str;
+	{
+	  return str;
+	}
       else if (*str == '\0')
-	return str;
+	{
+	  return str;
+	}
       str++;
     }
   return str;
 }
 
 /* Returns a pointer terminator char following *word */
-char *word_terminator(char *word);
+char *word_terminator(char *word)
 {
-  while(*str != '\0')
+  while(*word != '\0')
     {
-      if (non_space_char(*str) == 0)
-	return str;
-      else if (*str == '\0')
-	return str;
-      str++;
+      if (non_space_char(*word) == 0)
+	return word;
+      else if (*word == '\0')
+	return word;
+      word++;
     }
-  return str;
+  return word;
 }
 
 /* Counts the number of words in the string argument. */
-int count_words(char *str);
+int count_words(char *str)
 {
   int word_count=0;
   while(*str != '\0')
@@ -71,18 +75,17 @@ int count_words(char *str);
 
 /* Returns a fresly allocated new zero-terminated string 
    containing <len> chars from <inStr> */
-char *copy_str(char *inStr, short len);
+char *copy_str(char *inStr, short len)
 {
-  char *str = (char *) malloc(sizeof(char)*len+1);
-  char *temp = str;
-  while (*inStr != '\0')
+  char *dupe = malloc((len+1) * sizeof(char));
+  int index = 0;
+  while (index < len)
     {
-      *str *= *inStr;
-      str++;
-      inStr++;
+      dupe[index] = inStr[index];
+      index++;
     }
-  *str = '\0';
-  return temp;
+  dupe[index] ='\0';
+  return dupe;
 }
 
 /* Returns a freshly allocated zero-terminated vector of freshly allocated 
@@ -94,25 +97,30 @@ char *copy_str(char *inStr, short len);
      tokens[2] = "string" 
      tokens[3] = 0
 */
-char **tokenize(char* str);
+char **tokenize(char* str)
 {
   int index = 0;
-  int length = count_words(str);
-  char** tokens = (char**) malloc(sizeof(char) * (length)+1);
-  while(index < length)
+  int length = 0;
+  int wordTotal = count_words(str);
+  char **tokens = malloc((wordTotal+1) * sizeof(char *));
+  char *temp = str;
+  while (index < wordTotal)
     {
-      char* tokenized = copy_str(word_start(str), word_end(str) - word_start(str));
-      tokens[index] = tokenized;
+      temp = word_start(temp);
+      length = word_length(temp);
+      tokens[index] = copy_str(temp, length);
+      temp = word_terminator(temp);
       index++;
     }
+  tokens[index] = 0;
   return tokens;
 }
 
 /* Prints all tokens. */
-void print_tokens(char **tokens);
+void print_tokens(char **tokens)
 {
   int index = 0;
-  while (tokens[index] != NULL)
+  while(tokens[index] != 0)
     {
       printf("%s\n", tokens[index]);
       index++;
@@ -120,4 +128,40 @@ void print_tokens(char **tokens);
 }
 
 /* Frees all tokens and the vector containing themx. */
-void free_tokens(char **tokens);
+void free_tokens(char **tokens)
+{
+  int index = 0;
+  while (tokens[index] != 0)
+    {
+      free(tokens[index]);
+      index++;
+    }
+  free(tokens);
+}
+
+short string_length(char *str)
+{
+  int index = 0;
+  short length = 0;
+  while(*(str+index) != '\0')
+    {
+      length += 1;
+      index++;
+    }
+  return length;
+}
+
+int word_length(char *str)
+{
+  int index = 0;
+  int length = 0;
+  while(*(str+index) != '\0')
+    {
+      if (non_space_char(*(str+index)))
+	length++;
+      else
+	break;
+      index++;
+    }
+  return length;
+}
